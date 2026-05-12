@@ -265,241 +265,421 @@
     </div>
     <div class="small-note">🌸 every answer is special 🌸</div>
 </div>
-
 <script>
+(function () {
+    // === BASIC PROTECTION ===
+    document.addEventListener('contextmenu', e => e.preventDefault());
+
+    document.onkeydown = function (e) {
+        if (
+            e.keyCode === 123 ||
+            (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) ||
+            (e.ctrlKey && e.key.toUpperCase() === 'U')
+        ) {
+            return false;
+        }
+    };
+
+    setInterval(() => {
+        const threshold = 160;
+        if (
+            window.outerWidth - window.innerWidth > threshold ||
+            window.outerHeight - window.innerHeight > threshold
+        ) {
+            document.body.innerHTML = '';
+        }
+    }, 1000);
+
     // === LIGHT & JOYFUL INTERACTIVE EXPERIENCE ===
-    // Floating hearts background
     function createFloatingHearts() {
         const container = document.getElementById('heartsContainer');
         const heartCount = 28;
+
         for (let i = 0; i < heartCount; i++) {
             const heart = document.createElement('i');
+
             const size = Math.random() * 18 + 6;
+
             heart.style.width = `${size}px`;
             heart.style.height = `${size}px`;
             heart.style.left = `${Math.random() * 100}%`;
             heart.style.animationDuration = `${Math.random() * 12 + 8}s`;
             heart.style.animationDelay = `${Math.random() * 10}s`;
-            heart.style.background = `rgba(255, ${Math.floor(140 + Math.random() * 80)}, ${Math.floor(160 + Math.random() * 80)}, 0.5)`;
+
+            heart.style.background =
+                `rgba(255, ${Math.floor(140 + Math.random() * 80)}, ${Math.floor(160 + Math.random() * 80)}, 0.5)`;
+
             heart.style.borderRadius = '50%';
             heart.style.opacity = '0.3';
             heart.style.position = 'absolute';
             heart.style.bottom = '-20px';
             heart.style.filter = 'blur(1px)';
+
             container.appendChild(heart);
         }
     }
+
     createFloatingHearts();
 
-    // Helper to create romantic media (video fallback with sweet animations)
+    // === MEDIA CREATOR ===
     function createRomanticMedia(type) {
+
         const container = document.createElement('div');
         container.style.width = '100%';
-        
-        // Message header based on choice
+
         const headline = document.createElement('div');
         headline.className = 'message';
-        if (type === 'yes') {
-            headline.innerHTML = '💖 YAY! You made my whole world brighter 💖';
-        } else {
-            headline.innerHTML = '🌸 Still grateful for you, always 🌸';
-        }
+
+        headline.innerHTML =
+            type === 'yes'
+                ? '💖 YAY! You made my whole world brighter 💖'
+                : '🌸 Still grateful for you, always 🌸';
+
         container.appendChild(headline);
-        
+
         const mediaWrapper = document.createElement('div');
         mediaWrapper.className = 'video-wrapper';
-        
-        // attempt to use video if available - check if file can be loaded (no error)
-        const videoSrc = type === 'yes' ? 'yesvideo.mp4' : 'novideo.mp4';
+
+        const videoSrc =
+            type === 'yes'
+                ? 'yesvideo.webm'
+                : 'novideo.webm';
+
         const videoElem = document.createElement('video');
+
         videoElem.autoplay = true;
         videoElem.loop = true;
         videoElem.muted = false;
         videoElem.controls = true;
+
         videoElem.style.width = '100%';
         videoElem.style.borderRadius = '28px';
         videoElem.style.backgroundColor = '#ffeef2';
         videoElem.style.maxHeight = '280px';
-        
+
         const source = document.createElement('source');
+
         source.src = videoSrc;
         source.type = 'video/mp4';
+
         videoElem.appendChild(source);
-        
+
         let fallbackUsed = false;
+
         videoElem.addEventListener('error', () => {
+
             if (fallbackUsed) return;
+
             fallbackUsed = true;
+
             mediaWrapper.innerHTML = '';
+
             const fallbackDiv = document.createElement('div');
-            fallbackDiv.style.background = 'linear-gradient(135deg, #fff1f4, #ffe6ec)';
+
+            fallbackDiv.style.background =
+                'linear-gradient(135deg, #fff1f4, #ffe6ec)';
+
             fallbackDiv.style.borderRadius = '32px';
             fallbackDiv.style.padding = '1.6rem 1rem';
             fallbackDiv.style.textAlign = 'center';
-            fallbackDiv.style.boxShadow = 'inset 0 1px 4px rgba(255,255,255,0.8), 0 4px 12px rgba(0,0,0,0.05)';
-            
+
+            fallbackDiv.style.boxShadow =
+                'inset 0 1px 4px rgba(255,255,255,0.8), 0 4px 12px rgba(0,0,0,0.05)';
+
             if (type === 'yes') {
+
                 fallbackDiv.innerHTML = `
-                    <div style="font-size: 3.2rem; animation: bounceHeart 1s infinite alternate;">💗💗💗</div>
-                    <div style="font-weight: 600; margin: 12px 0 8px; color:#c84b67;">You said YES! ✨</div>
-                    <div style="font-size:0.9rem; color:#a55c70;">Here’s a digital hug + a shower of confetti 🎉</div>
-                    <div style="margin-top: 12px; display:flex; justify-content:center; gap:8px;"><span>💐</span><span>🎂</span><span>🍰</span><span>💌</span></div>
+                    <div style="font-size:3.2rem;animation:bounceHeart 1s infinite alternate;">💗💗💗</div>
+                    <div style="font-weight:600;margin:12px 0 8px;color:#c84b67;">You said YES! ✨</div>
+                    <div style="font-size:0.9rem;color:#a55c70;">Here’s a digital hug + a shower of confetti 🎉</div>
+                    <div style="margin-top:12px;display:flex;justify-content:center;gap:8px;">
+                        <span>💐</span><span>🎂</span><span>🍰</span><span>💌</span>
+                    </div>
                 `;
+
             } else {
+
                 fallbackDiv.innerHTML = `
-                    <div style="font-size: 3rem; animation: floatGentle 2s infinite;">🌼☁️🌼</div>
-                    <div style="font-weight: 600; margin: 12px 0 8px; color:#b0697c;">You're still a wonderful soul 💫</div>
-                    <div style="font-size:0.9rem; color:#a76478;">No worries — here's a warm sunflower for you 🌻</div>
-                    <div style="margin-top: 12px;">✨ always special ✨</div>
+                    <div style="font-size:3rem;animation:floatGentle 2s infinite;">🌼☁️🌼</div>
+                    <div style="font-weight:600;margin:12px 0 8px;color:#b0697c;">You're still a wonderful soul 💫</div>
+                    <div style="font-size:0.9rem;color:#a76478;">No worries — here's a warm sunflower for you 🌻</div>
+                    <div style="margin-top:12px;">✨ always special ✨</div>
                 `;
             }
+
             if (!document.querySelector('#dynamicHeartBeat')) {
+
                 const styleSheet = document.createElement('style');
+
                 styleSheet.id = 'dynamicHeartBeat';
+
                 styleSheet.textContent = `
                     @keyframes bounceHeart {
-                        0% { transform: scale(0.9); opacity: 0.7; }
-                        100% { transform: scale(1.2); opacity: 1; text-shadow: 0 0 5px #ffb7c5; }
+                        0% {
+                            transform: scale(0.9);
+                            opacity: 0.7;
+                        }
+                        100% {
+                            transform: scale(1.2);
+                            opacity: 1;
+                            text-shadow: 0 0 5px #ffb7c5;
+                        }
                     }
+
                     @keyframes floatGentle {
-                        0% { transform: translateY(0px); }
-                        100% { transform: translateY(-8px); }
+                        0% {
+                            transform: translateY(0px);
+                        }
+                        100% {
+                            transform: translateY(-8px);
+                        }
                     }
                 `;
+
                 document.head.appendChild(styleSheet);
             }
+
             mediaWrapper.appendChild(fallbackDiv);
         });
-        
+
         videoElem.addEventListener('canplay', () => {
+
             if (!fallbackUsed) {
+
                 mediaWrapper.innerHTML = '';
+
                 mediaWrapper.appendChild(videoElem);
-                videoElem.play().catch(e => console.log("autoplay prevented? fine", e));
+
+                videoElem.play().catch(() => {});
             }
         });
-        
-        if (!fallbackUsed) mediaWrapper.appendChild(videoElem);
-        
-        container.appendChild(mediaWrapper);
-        
-        const extraNote = document.createElement('div');
-        extraNote.className = 'sparkle';
-        if (type === 'yes') {
-            extraNote.innerHTML = '💖 sending a thousand heartbeats your way 💖';
-        } else {
-            extraNote.innerHTML = '💌 and that’s perfectly okay — you matter 💌';
+
+        if (!fallbackUsed) {
+            mediaWrapper.appendChild(videoElem);
         }
+
+        container.appendChild(mediaWrapper);
+
+        const extraNote = document.createElement('div');
+
+        extraNote.className = 'sparkle';
+
+        extraNote.innerHTML =
+            type === 'yes'
+                ? '💖 sending a thousand heartbeats your way 💖'
+                : '💌 and that’s perfectly okay — you matter 💌';
+
         container.appendChild(extraNote);
-        
+
         return container;
     }
-    
+
+    // === RESPONSE ===
     function showResponse(type) {
+
         const responseArea = document.getElementById('responseArea');
+
         responseArea.innerHTML = '';
+
         const newContent = createRomanticMedia(type);
+
         responseArea.appendChild(newContent);
-        responseArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        
+
+        responseArea.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest'
+        });
+
         if (type === 'yes') {
             createConfettiMoment();
         } else {
             createSoftPetalEffect();
         }
     }
-    
-    // light confetti effect
+
+    // === CONFETTI ===
     function createConfettiMoment() {
+
         const confCount = 45;
+
         for (let i = 0; i < confCount; i++) {
+
             const conf = document.createElement('div');
+
             conf.style.position = 'fixed';
-            conf.style.width = `${Math.random() * 8 + 4}px`;
-            conf.style.height = `${Math.random() * 8 + 4}px`;
-            conf.style.background = `hsl(${Math.random() * 40 + 330}, 80%, 70%)`;
+
+            conf.style.width =
+                `${Math.random() * 8 + 4}px`;
+
+            conf.style.height =
+                `${Math.random() * 8 + 4}px`;
+
+            conf.style.background =
+                `hsl(${Math.random() * 40 + 330}, 80%, 70%)`;
+
             conf.style.borderRadius = '50%';
-            conf.style.left = `${Math.random() * 100}%`;
-            conf.style.top = `-20px`;
+
+            conf.style.left =
+                `${Math.random() * 100}%`;
+
+            conf.style.top = '-20px';
+
             conf.style.pointerEvents = 'none';
             conf.style.zIndex = '999';
             conf.style.opacity = '0.8';
-            conf.style.animation = `confettiFall ${Math.random() * 2 + 2}s linear forwards`;
+
+            conf.style.animation =
+                `confettiFall ${Math.random() * 2 + 2}s linear forwards`;
+
             document.body.appendChild(conf);
+
             setTimeout(() => conf.remove(), 2500);
         }
+
         if (!document.querySelector('#confettiKeyframe')) {
+
             const styleKey = document.createElement('style');
+
             styleKey.id = 'confettiKeyframe';
+
             styleKey.textContent = `
                 @keyframes confettiFall {
-                    0% { transform: translateY(0) rotate(0deg); opacity: 0.9; }
-                    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+                    0% {
+                        transform: translateY(0) rotate(0deg);
+                        opacity: 0.9;
+                    }
+                    100% {
+                        transform: translateY(100vh) rotate(360deg);
+                        opacity: 0;
+                    }
                 }
             `;
+
             document.head.appendChild(styleKey);
         }
     }
-    
+
+    // === PETALS ===
     function createSoftPetalEffect() {
+
         const petals = 25;
+
         for (let i = 0; i < petals; i++) {
+
             const petal = document.createElement('div');
+
             petal.innerHTML = '🌸';
+
             petal.style.position = 'fixed';
-            petal.style.fontSize = `${Math.random() * 16 + 10}px`;
-            petal.style.left = `${Math.random() * 100}%`;
-            petal.style.top = `-30px`;
+
+            petal.style.fontSize =
+                `${Math.random() * 16 + 10}px`;
+
+            petal.style.left =
+                `${Math.random() * 100}%`;
+
+            petal.style.top = '-30px';
+
             petal.style.pointerEvents = 'none';
             petal.style.zIndex = '999';
             petal.style.opacity = '0.6';
-            petal.style.animation = `petalFloat ${Math.random() * 3 + 2.5}s ease-in forwards`;
+
+            petal.style.animation =
+                `petalFloat ${Math.random() * 3 + 2.5}s ease-in forwards`;
+
             document.body.appendChild(petal);
+
             setTimeout(() => petal.remove(), 2800);
         }
+
         if (!document.querySelector('#petalKeyframe')) {
+
             const petalStyle = document.createElement('style');
+
             petalStyle.id = 'petalKeyframe';
+
             petalStyle.textContent = `
                 @keyframes petalFloat {
-                    0% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
-                    100% { transform: translateY(90vh) rotate(20deg); opacity: 0; }
+                    0% {
+                        transform: translateY(0) rotate(0deg);
+                        opacity: 0.7;
+                    }
+                    100% {
+                        transform: translateY(90vh) rotate(20deg);
+                        opacity: 0;
+                    }
                 }
             `;
+
             document.head.appendChild(petalStyle);
         }
     }
-    
+
+    // === BUTTONS ===
     const yesBtn = document.getElementById('yesButton');
     const noBtn = document.getElementById('noButton');
-    
+
     yesBtn.addEventListener('click', () => showResponse('yes'));
     noBtn.addEventListener('click', () => showResponse('no'));
-    
+
     const buttons = document.querySelectorAll('.btn');
+
     buttons.forEach(btn => {
-        btn.addEventListener('touchstart', (e) => {
+
+        btn.addEventListener('touchstart', () => {
             btn.style.transform = 'scale(0.97)';
         });
+
         btn.addEventListener('touchend', () => {
-            setTimeout(() => { btn.style.transform = ''; }, 100);
+            setTimeout(() => {
+                btn.style.transform = '';
+            }, 100);
         });
     });
-    
+
+    // === INITIAL MESSAGE ===
     window.addEventListener('load', () => {
-        const responseArea = document.getElementById('responseArea');
-        const initialDiv = document.createElement('div');
+
+        const responseArea =
+            document.getElementById('responseArea');
+
+        const initialDiv =
+            document.createElement('div');
+
         initialDiv.className = 'sparkle';
-        initialDiv.innerHTML = '☁️ tap yes or no — either way, you’re lovely ☁️';
+
+        initialDiv.innerHTML =
+            '☁️ tap yes or no — either way, you’re lovely ☁️';
+
         initialDiv.style.fontSize = '0.9rem';
-        initialDiv.style.animation = 'fadeGlow 1.5s infinite alternate';
+
+        initialDiv.style.animation =
+            'fadeGlow 1.5s infinite alternate';
+
         if (!document.querySelector('#fadeGlowKey')) {
-            const glow = document.createElement('style');
-            glow.textContent = `@keyframes fadeGlow { 0% { opacity: 0.5; } 100% { opacity: 1; text-shadow:0 0 2px pink;} }`;
+
+            const glow =
+                document.createElement('style');
+
+            glow.textContent = `
+                @keyframes fadeGlow {
+                    0% {
+                        opacity: 0.5;
+                    }
+                    100% {
+                        opacity: 1;
+                        text-shadow:0 0 2px pink;
+                    }
+                }
+            `;
+
             document.head.appendChild(glow);
         }
+
         responseArea.appendChild(initialDiv);
     });
+
+})();
 </script>
 </body>
 </html>
