@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>a little question ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* prevents accidental text selection on buttons, but not intrusive */
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #fff9f0 0%, #ffe6f0 100%);
+            font-family: 'Quicksand', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* floating hearts background (light theme) */
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-hearts i {
+            position: absolute;
+            background: rgba(255, 182, 193, 0.5);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: floatHeart 12s infinite linear;
+            opacity: 0.4;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(100vh) scale(0.8);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.6;
+            }
+            80% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-20vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* main card — light, dreamy, with subtle shadow */
+        .card {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border-radius: 56px;
+            max-width: 520px;
+            width: 100%;
+            padding: 2rem 2rem 2.2rem;
+            text-align: center;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            z-index: 2;
+        }
+
+        /* romantic handwritten style question */
+        .question {
+            font-family: 'Sacramento', cursive;
+            font-size: 3.4rem;
+            font-weight: 400;
+            color: #c44569;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 12px rgba(255, 200, 220, 0.6);
+        }
+
+        .sub {
+            font-size: 1rem;
+            color: #b05b6b;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            border-bottom: 1px dashed #ffc0cb;
+            display: inline-block;
+            padding-bottom: 6px;
+        }
+
+        /* button container with gap and hover styles */
+        .buttons-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1rem 0 1.2rem;
+        }
+
+        .btn {
+            border: none;
+            padding: 0.9rem 2rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            font-family: 'Quicksand', sans-serif;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            min-width: 140px;
+            letter-spacing: 1px;
+        }
+
+        /* --- GOLD STANDARD BUTTON COLORS --- */
+        /* Yes (Positive Action): Green (#28A745) as primary "go/success" */
+        .btn-yes {
+            background: #28A745;
+            color: white;
+            border: 1px solid #92e6a8;
+        }
+
+        .btn-yes:hover {
+            background: #218838;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(40, 167, 69, 0.35);
+        }
+
+        /* Optional alternative: If you ever prefer Blue (#007BFF) for neutral professional, 
+           but current spec uses Green as primary positive action. 
+           Keeping Green per Gold Standard "Green implies go/success". */
+        
+        /* No (Negative/Stop Action): Red (#DC3545) implies stop/error/cancel */
+        .btn-no {
+            background: #DC3545;
+            color: white;
+            border: 1px solid #ffb3bb;
+        }
+
+        .btn-no:hover {
+            background: #c82333;
+            transform: scale(0.98);
+            box-shadow: 0 8px 16px rgba(220, 53, 69, 0.3);
+        }
+        /* --- END GOLD STANDARD COLORS --- */
+
+        /* active state feedback */
+        button:active {
+            transform: scale(0.97);
+        }
+
+        .btn-yes:active {
+            background: #1e7e34;
+        }
+
+        .btn-no:active {
+            background: #bd2130;
+        }
+
+        /* video / message area — light, soft */
+        .response-area {
+            margin-top: 1.8rem;
+            padding: 0.5rem;
+            transition: all 0.2s ease;
+            border-radius: 48px;
+            background: rgba(255, 245, 245, 0.5);
+        }
+
+        .message {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #c9536e;
+            background: rgba(255, 246, 248, 0.7);
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            backdrop-filter: blur(8px);
+            margin-bottom: 1rem;
+        }
+
+        .video-wrapper {
+            margin-top: 0.5rem;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+            transition: 0.2s;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 32px;
+            display: block;
+            outline: none;
+            background: #fff0f3;
+        }
+
+        /* tiny extra charm */
+        .sparkle {
+            font-size: 0.9rem;
+            margin-top: 1.2rem;
+            color: #d9899e;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        .fallback-note {
+            font-size: 0.9rem;
+            background: #fff0f3;
+            border-radius: 28px;
+            padding: 12px;
+            color: #bf6a80;
+        }
+
+        /* responsive + touch */
+        @media (max-width: 480px) {
+            .card {
+                padding: 1.5rem;
+            }
+            .question {
+                font-size: 2.5rem;
+            }
+            .btn {
+                padding: 0.7rem 1rem;
+                font-size: 1.1rem;
+                min-width: 120px;
+            }
+            .message {
+                font-size: 1rem;
+            }
+        }
+
+        .small-note {
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: #ca98a6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="floating-hearts" id="heartsContainer"></div>
+
+<div class="card">
+    <div class="question">Will you be mine?</div>
+    <div class="sub">💗 a sweet little question 💗</div>
+
+    <div class="buttons-group">
+        <button class="btn btn-yes" id="yesButton">Yes 💕</button>
+        <button class="btn btn-no" id="noButton">No 💔</button>
+    </div>
+
+    <div class="response-area" id="responseArea">
+        <div class="sparkle">✨ tap your heart's answer ✨</div>
+    </div>
+    <div class="small-note">🌸 every answer is special 🌸</div>
+</div>
+
+<script>
+    // === LIGHT & JOYFUL INTERACTIVE EXPERIENCE ===
+    // Floating hearts background
+    function createFloatingHearts() {
+        const container = document.getElementById('heartsContainer');
+        const heartCount = 28;
+        for (let i = 0; i < heartCount; i++) {
+            const heart = document.createElement('i');
+            const size = Math.random() * 18 + 6;
+            heart.style.width = `${size}px`;
+            heart.style.height = `${size}px`;
+            heart.style.left = `${Math.random() * 100}%`;
+            heart.style.animationDuration = `${Math.random() * 12 + 8}s`;
+            heart.style.animationDelay = `${Math.random() * 10}s`;
+            heart.style.background = `rgba(255, ${Math.floor(140 + Math.random() * 80)}, ${Math.floor(160 + Math.random() * 80)}, 0.5)`;
+            heart.style.borderRadius = '50%';
+            heart.style.opacity = '0.3';
+            heart.style.position = 'absolute';
+            heart.style.bottom = '-20px';
+            heart.style.filter = 'blur(1px)';
+            container.appendChild(heart);
+        }
+    }
+    createFloatingHearts();
+
+    // Helper to create romantic media (video fallback with sweet animations)
+    function createRomanticMedia(type) {
+        const container = document.createElement('div');
+        container.style.width = '100%';
+        
+        // Message header based on choice
+        const headline = document.createElement('div');
+        headline.className = 'message';
+        if (type === 'yes') {
+            headline.innerHTML = '💖 YAY! You made my whole world brighter 💖';
+        } else {
+            headline.innerHTML = '🌸 Still grateful for you, always 🌸';
+        }
+        container.appendChild(headline);
+        
+        const mediaWrapper = document.createElement('div');
+        mediaWrapper.className = 'video-wrapper';
+        
+        // attempt to use video if available - check if file can be loaded (no error)
+        const videoSrc = type === 'yes' ? 'yesvideo.mp4' : 'novideo.mp4';
+        const videoElem = document.createElement('video');
+        videoElem.autoplay = true;
+        videoElem.loop = true;
+        videoElem.muted = false;
+        videoElem.controls = true;
+        videoElem.style.width = '100%';
+        videoElem.style.borderRadius = '28px';
+        videoElem.style.backgroundColor = '#ffeef2';
+        videoElem.style.maxHeight = '280px';
+        
+        const source = document.createElement('source');
+        source.src = videoSrc;
+        source.type = 'video/mp4';
+        videoElem.appendChild(source);
+        
+        let fallbackUsed = false;
+        videoElem.addEventListener('error', () => {
+            if (fallbackUsed) return;
+            fallbackUsed = true;
+            mediaWrapper.innerHTML = '';
+            const fallbackDiv = document.createElement('div');
+            fallbackDiv.style.background = 'linear-gradient(135deg, #fff1f4, #ffe6ec)';
+            fallbackDiv.style.borderRadius = '32px';
+            fallbackDiv.style.padding = '1.6rem 1rem';
+            fallbackDiv.style.textAlign = 'center';
+            fallbackDiv.style.boxShadow = 'inset 0 1px 4px rgba(255,255,255,0.8), 0 4px 12px rgba(0,0,0,0.05)';
+            
+            if (type === 'yes') {
+                fallbackDiv.innerHTML = `
+                    <div style="font-size: 3.2rem; animation: bounceHeart 1s infinite alternate;">💗💗💗</div>
+                    <div style="font-weight: 600; margin: 12px 0 8px; color:#c84b67;">You said YES! ✨</div>
+                    <div style="font-size:0.9rem; color:#a55c70;">Here’s a digital hug + a shower of confetti 🎉</div>
+                    <div style="margin-top: 12px; display:flex; justify-content:center; gap:8px;"><span>💐</span><span>🎂</span><span>🍰</span><span>💌</span></div>
+                `;
+            } else {
+                fallbackDiv.innerHTML = `
+                    <div style="font-size: 3rem; animation: floatGentle 2s infinite;">🌼☁️🌼</div>
+                    <div style="font-weight: 600; margin: 12px 0 8px; color:#b0697c;">You're still a wonderful soul 💫</div>
+                    <div style="font-size:0.9rem; color:#a76478;">No worries — here's a warm sunflower for you 🌻</div>
+                    <div style="margin-top: 12px;">✨ always special ✨</div>
+                `;
+            }
+            if (!document.querySelector('#dynamicHeartBeat')) {
+                const styleSheet = document.createElement('style');
+                styleSheet.id = 'dynamicHeartBeat';
+                styleSheet.textContent = `
+                    @keyframes bounceHeart {
+                        0% { transform: scale(0.9); opacity: 0.7; }
+                        100% { transform: scale(1.2); opacity: 1; text-shadow: 0 0 5px #ffb7c5; }
+                    }
+                    @keyframes floatGentle {
+                        0% { transform: translateY(0px); }
+                        100% { transform: translateY(-8px); }
+                    }
+                `;
+                document.head.appendChild(styleSheet);
+            }
+            mediaWrapper.appendChild(fallbackDiv);
+        });
+        
+        videoElem.addEventListener('canplay', () => {
+            if (!fallbackUsed) {
+                mediaWrapper.innerHTML = '';
+                mediaWrapper.appendChild(videoElem);
+                videoElem.play().catch(e => console.log("autoplay prevented? fine", e));
+            }
+        });
+        
+        if (!fallbackUsed) mediaWrapper.appendChild(videoElem);
+        
+        container.appendChild(mediaWrapper);
+        
+        const extraNote = document.createElement('div');
+        extraNote.className = 'sparkle';
+        if (type === 'yes') {
+            extraNote.innerHTML = '💖 sending a thousand heartbeats your way 💖';
+        } else {
+            extraNote.innerHTML = '💌 and that’s perfectly okay — you matter 💌';
+        }
+        container.appendChild(extraNote);
+        
+        return container;
+    }
+    
+    function showResponse(type) {
+        const responseArea = document.getElementById('responseArea');
+        responseArea.innerHTML = '';
+        const newContent = createRomanticMedia(type);
+        responseArea.appendChild(newContent);
+        responseArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        if (type === 'yes') {
+            createConfettiMoment();
+        } else {
+            createSoftPetalEffect();
+        }
+    }
+    
+    // light confetti effect
+    function createConfettiMoment() {
+        const confCount = 45;
+        for (let i = 0; i < confCount; i++) {
+            const conf = document.createElement('div');
+            conf.style.position = 'fixed';
+            conf.style.width = `${Math.random() * 8 + 4}px`;
+            conf.style.height = `${Math.random() * 8 + 4}px`;
+            conf.style.background = `hsl(${Math.random() * 40 + 330}, 80%, 70%)`;
+            conf.style.borderRadius = '50%';
+            conf.style.left = `${Math.random() * 100}%`;
+            conf.style.top = `-20px`;
+            conf.style.pointerEvents = 'none';
+            conf.style.zIndex = '999';
+            conf.style.opacity = '0.8';
+            conf.style.animation = `confettiFall ${Math.random() * 2 + 2}s linear forwards`;
+            document.body.appendChild(conf);
+            setTimeout(() => conf.remove(), 2500);
+        }
+        if (!document.querySelector('#confettiKeyframe')) {
+            const styleKey = document.createElement('style');
+            styleKey.id = 'confettiKeyframe';
+            styleKey.textContent = `
+                @keyframes confettiFall {
+                    0% { transform: translateY(0) rotate(0deg); opacity: 0.9; }
+                    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(styleKey);
+        }
+    }
+    
+    function createSoftPetalEffect() {
+        const petals = 25;
+        for (let i = 0; i < petals; i++) {
+            const petal = document.createElement('div');
+            petal.innerHTML = '🌸';
+            petal.style.position = 'fixed';
+            petal.style.fontSize = `${Math.random() * 16 + 10}px`;
+            petal.style.left = `${Math.random() * 100}%`;
+            petal.style.top = `-30px`;
+            petal.style.pointerEvents = 'none';
+            petal.style.zIndex = '999';
+            petal.style.opacity = '0.6';
+            petal.style.animation = `petalFloat ${Math.random() * 3 + 2.5}s ease-in forwards`;
+            document.body.appendChild(petal);
+            setTimeout(() => petal.remove(), 2800);
+        }
+        if (!document.querySelector('#petalKeyframe')) {
+            const petalStyle = document.createElement('style');
+            petalStyle.id = 'petalKeyframe';
+            petalStyle.textContent = `
+                @keyframes petalFloat {
+                    0% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+                    100% { transform: translateY(90vh) rotate(20deg); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(petalStyle);
+        }
+    }
+    
+    const yesBtn = document.getElementById('yesButton');
+    const noBtn = document.getElementById('noButton');
+    
+    yesBtn.addEventListener('click', () => showResponse('yes'));
+    noBtn.addEventListener('click', () => showResponse('no'));
+    
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(btn => {
+        btn.addEventListener('touchstart', (e) => {
+            btn.style.transform = 'scale(0.97)';
+        });
+        btn.addEventListener('touchend', () => {
+            setTimeout(() => { btn.style.transform = ''; }, 100);
+        });
+    });
+    
+    window.addEventListener('load', () => {
+        const responseArea = document.getElementById('responseArea');
+        const initialDiv = document.createElement('div');
+        initialDiv.className = 'sparkle';
+        initialDiv.innerHTML = '☁️ tap yes or no — either way, you’re lovely ☁️';
+        initialDiv.style.fontSize = '0.9rem';
+        initialDiv.style.animation = 'fadeGlow 1.5s infinite alternate';
+        if (!document.querySelector('#fadeGlowKey')) {
+            const glow = document.createElement('style');
+            glow.textContent = `@keyframes fadeGlow { 0% { opacity: 0.5; } 100% { opacity: 1; text-shadow:0 0 2px pink;} }`;
+            document.head.appendChild(glow);
+        }
+        responseArea.appendChild(initialDiv);
+    });
+</script>
+</body>
+</html>
